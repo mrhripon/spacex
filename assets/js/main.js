@@ -1,8 +1,6 @@
 (function ($) {
   "use strict";
 
-
-
   $(document).ready(function() {
 
     // Query for Preloader 
@@ -27,15 +25,55 @@
         }
       });
 
-    $('.hero-bg-slider-active').slick({
-        infinite: true,
-        speed: 800,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 2000,
-        arrows: false
-        })
+
+  let rev = $('.rev_slider');
+  let next, prev;
+  rev.on('init', function(event, slick, currentSlide) {
+    let cur = $(slick.$slides[slick.currentSlide]),
+        next = cur.next(),
+        prev = cur.prev();
+        prev.addClass('slick-sprev');
+        next.addClass('slick-snext');
+        cur.removeClass('slick-snext').removeClass('slick-sprev');
+        slick.$prev = prev;
+        slick.$next = next;
+  }).on('beforeChange', function(event, slick, currentSlide, nextSlide) {
+      let cur = $(slick.$slides[nextSlide]);
+      slick.$prev.removeClass('slick-sprev');
+      slick.$next.removeClass('slick-snext');
+      next = cur.next(),
+      prev = cur.prev();
+      prev.prev();
+      prev.next();
+      prev.addClass('slick-sprev');
+      next.addClass('slick-snext');
+      slick.$prev = prev;
+      slick.$next = next;
+      cur.removeClass('slick-next').removeClass('slick-sprev');
+  });
+
+  rev.slick({
+    speed: 1000,
+    arrows: true,
+    dots: false,
+    focusOnSelect: true,
+    preletrow: '<button> prev</button>',
+    nextArrow: '<button> next</button>',
+    infinite: true,
+    centerMode: true,
+    slidesPerRow: 1,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    centerPadding: '0',
+    swipe: true,
+    customPaging: function(slider, i) {
+      return '';
+    },
+    infinite: true
+  });
+
+
+
 
         $('#nav').onePageNav();
 
@@ -49,14 +87,14 @@
 
 
          //   Query For scroll back to top 
-  var back = $('.back-to-top');
+  let back = $('.back-to-top');
   back.on('click', function () {
       $('html, body').animate({
           scrollTop: 0,
       }, 900);
   })
   $(window).on('scroll', function () {
-      var self = $(this),
+      let self = $(this),
           height = self.height(),
           top = self.scrollTop();
       if (top > height) {
@@ -69,6 +107,9 @@
         
   });
 
+
+
+  
 
 
      
